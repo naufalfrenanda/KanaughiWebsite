@@ -1,176 +1,195 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
-  ArrowDownRight,
   ArrowRight,
-  Check,
-  ClipboardList,
-  Clock3,
+  BadgeCheck,
+  BarChart3,
+  BriefcaseBusiness,
+  CheckCircle2,
+  ChevronRight,
+  Coffee,
+  FileCheck2,
   FileText,
-  MapPin,
+  Headphones,
   Menu,
-  MessageSquareText,
-  PackageCheck,
+  MessageCircle,
+  Moon,
+  NotebookPen,
+  Package,
+  PenTool,
   Printer,
-  ShieldCheck,
+  Search,
+  Send,
   Shirt,
+  ShoppingCart,
+  Sparkles,
+  Star,
+  Sun,
   Truck,
   X,
 } from "lucide-react";
+import warehouseImage from "../assets/procurement-warehouse.png";
 
-const categories = [
-  {
-    number: "01",
-    title: "Perlengkapan Kantor",
-    description:
-      "ATK, notebook custom, pantry supplies, dan kebutuhan operasional harian dalam satu pengadaan.",
-    detail: "120+ jenis kebutuhan",
-    icon: ClipboardList,
-    tone: "bg-[#d8c9b6]",
-  },
-  {
-    number: "02",
-    title: "Media Percetakan",
-    description:
-      "Kartu nama, kemasan, banner, company profile, hingga material event dengan hasil cetak yang terjaga.",
-    detail: "Cetak satuan & volume",
-    icon: Printer,
-    tone: "bg-[#bd6952]",
-  },
-  {
-    number: "03",
-    title: "Seragam & Konveksi",
-    description:
-      "Kemeja, kaos, jaket, tote bag, dan seragam tim yang disesuaikan dengan identitas perusahaan.",
-    detail: "Ukuran & bahan custom",
-    icon: Shirt,
-    tone: "bg-[#6d7561]",
-  },
+type Icon = React.ComponentType<{ className?: string; size?: number; strokeWidth?: number }>;
+
+const navItems = [
+  ["Layanan", "#layanan"],
+  ["Cara Kerja", "#cara-kerja"],
+  ["Keunggulan", "#keunggulan"],
+  ["Harga", "#harga"],
+  ["Kontak", "#kontak"],
+];
+
+const productTabs = ["Perlengkapan Kantor", "Media Percetakan", "Seragam & Konveksi"];
+
+const productItems = [
+  { icon: NotebookPen, label: "Notebook Custom" },
+  { icon: PenTool, label: "ATK Harian" },
+  { icon: Coffee, label: "Pantry Supply" },
+  { icon: Printer, label: "Kartu Nama" },
+  { icon: Package, label: "Kemasan" },
+  { icon: Shirt, label: "Seragam" },
+];
+
+const officeItems = [
+  { icon: PenTool, label: "Alat Tulis" },
+  { icon: NotebookPen, label: "Notebook Custom" },
+  { icon: FileText, label: "Filing & Arsip" },
+  { icon: Coffee, label: "Pantry" },
+  { icon: Printer, label: "Tinta & Kertas" },
+  { icon: Headphones, label: "Aksesori Kerja" },
+];
+
+const uniformItems = [
+  { icon: BriefcaseBusiness, label: "Kemeja", caption: "Formal & lapangan" },
+  { icon: Shirt, label: "Kaos", caption: "Cotton & dry-fit" },
+  { icon: Shirt, label: "Jaket", caption: "Bomber & windbreaker" },
+  { icon: Package, label: "Aksesori", caption: "Tote bag & topi" },
 ];
 
 const steps = [
-  {
-    number: "01",
-    title: "Kirim kebutuhan",
-    description:
-      "Bagikan daftar barang, jumlah, spesifikasi, atau brief yang sudah Anda punya.",
-    icon: MessageSquareText,
-  },
-  {
-    number: "02",
-    title: "Kami kurasi opsi",
-    description:
-      "Tim kami mencarikan produk dan spesifikasi yang paling sesuai dengan kebutuhan.",
-    icon: ClipboardList,
-  },
-  {
-    number: "03",
-    title: "Setujui penawaran",
-    description:
-      "Tinjau pilihan, harga, sampel, dan jadwal sebelum pesanan diproses.",
-    icon: FileText,
-  },
-  {
-    number: "04",
-    title: "Produksi & kirim",
-    description:
-      "Kami koordinasikan pengerjaan hingga barang diterima sesuai kesepakatan.",
-    icon: PackageCheck,
-  },
+  { icon: Send, title: "Kirim Kebutuhan", text: "Kirim daftar barang, spesifikasi, jumlah, dan tenggat Anda." },
+  { icon: Search, title: "Kami Kurasi Opsi", text: "Kami pilihkan opsi terbaik dari vendor yang sudah terverifikasi." },
+  { icon: FileCheck2, title: "Setujui Penawaran", text: "Bandingkan spesifikasi dan harga dalam satu penawaran ringkas." },
+  { icon: Truck, title: "Produksi & Kirim", text: "Kami kawal QC, produksi, dan pengiriman sampai lokasi Anda." },
 ];
 
-const trustItems = [
-  { label: "Berbasis di", value: "Bekasi", icon: MapPin },
-  { label: "Area layanan", value: "Jabodetabek", icon: Truck },
-  { label: "Respons penawaran", value: "< 1 hari kerja", icon: Clock3 },
-  { label: "Dokumen bisnis", value: "PO & invoice", icon: ShieldCheck },
-];
-
-const navItems = [
-  { label: "Kategori", href: "#kategori" },
-  { label: "Cara kerja", href: "#cara-kerja" },
-  { label: "Tentang", href: "#tentang" },
-];
-
-function Wordmark() {
+function Button({
+  children,
+  href,
+  secondary = false,
+  className = "",
+}: {
+  children: React.ReactNode;
+  href: string;
+  secondary?: boolean;
+  className?: string;
+}) {
   return (
     <a
-      href="#beranda"
-      className="group inline-flex items-center gap-2.5"
-      aria-label="Kanaughi, kembali ke beranda"
+      href={href}
+      className={`inline-flex min-h-12 items-center justify-center gap-2 rounded-full px-6 text-sm font-semibold transition-all duration-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary ${
+        secondary
+          ? "border border-border bg-card text-foreground hover:border-primary/40 hover:text-primary"
+          : "bg-primary text-primary-foreground shadow-sm hover:-translate-y-0.5 hover:bg-primary-strong hover:shadow-lg"
+      } ${className}`}
     >
-      <span className="grid size-8 place-items-center rounded-full border border-foreground/20 bg-[#e6dbcf] text-[12px] font-bold">
-        K
-      </span>
-      <span className="font-serif text-[22px] font-semibold tracking-[-0.03em]">
-        Kanaughi
-      </span>
+      {children}
     </a>
   );
 }
 
+function SectionLabel({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="mb-8 flex items-center gap-4">
+      <span className="rounded-full border border-border bg-card px-3 py-1.5 text-[11px] font-bold uppercase tracking-[0.16em] text-primary">
+        {children}
+      </span>
+      <span className="h-px flex-1 bg-border" />
+    </div>
+  );
+}
+
+function ServiceTile({
+  icon: IconComponent,
+  label,
+  large = false,
+}: {
+  icon: Icon;
+  label: string;
+  large?: boolean;
+}) {
+  return (
+    <article
+      className={`group flex flex-col justify-between rounded-2xl border border-border bg-card p-6 transition-all duration-300 hover:-translate-y-1 hover:border-primary/20 hover:bg-panel hover:shadow-sm ${
+        large ? "min-h-56 sm:min-h-64" : "min-h-40"
+      }`}
+    >
+      <div className="grid size-11 place-items-center rounded-xl bg-panel text-primary transition-colors group-hover:bg-primary group-hover:text-primary-foreground">
+        <IconComponent size={21} strokeWidth={1.8} />
+      </div>
+      <div className="flex items-end justify-between gap-4">
+        <h3 className={large ? "max-w-52 text-2xl font-semibold tracking-tight" : "text-base font-semibold"}>
+          {label}
+        </h3>
+        <ChevronRight className="text-muted-foreground transition-transform group-hover:translate-x-1" size={18} />
+      </div>
+    </article>
+  );
+}
+
 function Header() {
-  const [menuOpen, setMenuOpen] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [dark, setDark] = useState(false);
+
+  useEffect(() => {
+    document.documentElement.classList.toggle("dark", dark);
+  }, [dark]);
 
   return (
-    <header className="sticky top-0 z-50 border-b border-border bg-background/95 backdrop-blur-md">
-      <div className="mx-auto flex h-[76px] max-w-[1360px] items-center justify-between px-5 sm:px-8 lg:px-12">
-        <Wordmark />
-
-        <nav className="hidden items-center gap-9 md:flex" aria-label="Navigasi utama">
-          {navItems.map((item) => (
-            <a
-              key={item.href}
-              href={item.href}
-              className="relative py-2 text-sm font-semibold text-foreground/70 transition-colors after:absolute after:inset-x-0 after:bottom-0 after:h-px after:origin-left after:scale-x-0 after:bg-primary after:transition-transform hover:text-foreground hover:after:scale-x-100 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary"
-            >
-              {item.label}
+    <header className="fixed inset-x-0 top-0 z-50 border-b border-border/80 bg-background/80 backdrop-blur-xl">
+      <div className="mx-auto flex h-[72px] max-w-shell items-center justify-between px-gutter">
+        <a href="#beranda" className="text-xl font-bold tracking-tighter" aria-label="Kanaughi, kembali ke beranda">
+          Kanaughi<span className="text-accent">.</span>
+        </a>
+        <nav className="hidden items-center gap-7 lg:flex" aria-label="Navigasi utama">
+          {navItems.map(([label, href]) => (
+            <a key={href} href={href} className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary">
+              {label}
             </a>
           ))}
         </nav>
-
-        <a
-          href="#kontak"
-          className="hidden min-h-11 items-center gap-2 rounded-full bg-primary px-5 text-sm font-bold text-primary-foreground transition-transform hover:-translate-y-0.5 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary md:inline-flex"
-        >
-          Minta penawaran <ArrowUpRightIcon />
-        </a>
-
-        <button
-          type="button"
-          className="grid size-11 place-items-center rounded-full border border-border md:hidden"
-          aria-expanded={menuOpen}
-          aria-controls="mobile-navigation"
-          aria-label={menuOpen ? "Tutup menu" : "Buka menu"}
-          onClick={() => setMenuOpen((open) => !open)}
-        >
-          {menuOpen ? <X size={20} /> : <Menu size={20} />}
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={() => setDark((value) => !value)}
+            className="grid size-10 place-items-center rounded-full border border-border bg-card text-muted-foreground transition-colors hover:text-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+            aria-label={dark ? "Gunakan mode terang" : "Gunakan mode gelap"}
+          >
+            {dark ? <Sun size={17} /> : <Moon size={17} />}
+          </button>
+          <Button href="#kontak" className="hidden sm:inline-flex">
+            Mulai Pengadaan <ArrowRight size={16} />
+          </Button>
+          <button
+            type="button"
+            className="grid size-10 place-items-center rounded-full border border-border bg-card lg:hidden"
+            aria-expanded={open}
+            aria-controls="mobile-menu"
+            aria-label={open ? "Tutup menu" : "Buka menu"}
+            onClick={() => setOpen((value) => !value)}
+          >
+            {open ? <X size={19} /> : <Menu size={19} />}
+          </button>
+        </div>
       </div>
-
-      {menuOpen && (
-        <nav
-          id="mobile-navigation"
-          className="border-t border-border bg-background px-5 py-5 md:hidden"
-          aria-label="Navigasi seluler"
-        >
-          <div className="flex flex-col gap-1">
-            {navItems.map((item) => (
-              <a
-                key={item.href}
-                href={item.href}
-                className="rounded-lg px-3 py-3.5 text-lg font-semibold hover:bg-secondary"
-                onClick={() => setMenuOpen(false)}
-              >
-                {item.label}
+      {open && (
+        <nav id="mobile-menu" className="border-t border-border bg-background px-gutter py-5 lg:hidden" aria-label="Navigasi mobile">
+          <div className="mx-auto flex max-w-shell flex-col">
+            {navItems.map(([label, href]) => (
+              <a key={href} href={href} onClick={() => setOpen(false)} className="border-b border-border py-4 font-medium">
+                {label}
               </a>
             ))}
-            <a
-              href="#kontak"
-              className="mt-3 inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-primary px-5 font-bold text-primary-foreground"
-              onClick={() => setMenuOpen(false)}
-            >
-              Minta penawaran <ArrowUpRightIcon />
-            </a>
           </div>
         </nav>
       )}
@@ -178,57 +197,97 @@ function Header() {
   );
 }
 
-function ArrowUpRightIcon() {
-  return <ArrowRight size={16} aria-hidden="true" className="-rotate-45" />;
+function ProductPanel() {
+  const [activeTab, setActiveTab] = useState(0);
+
+  return (
+    <section className="mx-auto max-w-shell px-gutter">
+      <div className="relative min-h-[500px] overflow-hidden rounded-3xl border border-border bg-panel shadow-sm">
+        <div className="scrollbar-hidden relative z-10 flex gap-1 overflow-x-auto border-b border-border bg-card/60 p-3 backdrop-blur-xl" role="tablist">
+          {productTabs.map((tab, index) => (
+            <button
+              key={tab}
+              type="button"
+              role="tab"
+              aria-selected={activeTab === index}
+              onClick={() => setActiveTab(index)}
+              className={`shrink-0 rounded-xl px-5 py-3 text-sm font-semibold transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary ${
+                activeTab === index ? "bg-card text-primary shadow-sm" : "text-muted-foreground hover:text-primary"
+              }`}
+            >
+              {tab}
+            </button>
+          ))}
+        </div>
+        <div className="pointer-events-none absolute inset-0 overflow-hidden">
+          <span className="absolute left-[20%] top-[28%] size-72 rounded-full bg-primary/20 blur-3xl" />
+          <span className="absolute right-[18%] top-[34%] size-64 rounded-full bg-accent/20 blur-3xl" />
+          <span className="absolute bottom-0 left-[43%] size-56 rounded-full bg-slate-orb/30 blur-3xl" />
+        </div>
+        <div className="relative z-10 flex min-h-[350px] flex-col items-center justify-center px-6 py-14 text-center">
+          <span className="mb-8 inline-flex items-center gap-2 rounded-full border border-border bg-card/75 px-4 py-2 text-xs font-semibold backdrop-blur-md">
+            <span className="size-2 rounded-full bg-accent shadow-status" />
+            Satu Platform Pengadaan
+          </span>
+          <button
+            type="button"
+            className="group grid size-24 place-items-center rounded-full border border-white/40 bg-card/70 text-primary shadow-glass backdrop-blur-3xl transition-all duration-300 hover:scale-105 hover:text-accent focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary"
+            aria-label={`Mulai pengadaan ${productTabs[activeTab]}`}
+          >
+            <ShoppingCart size={34} strokeWidth={1.6} className="transition-transform group-hover:-rotate-6" />
+          </button>
+          <p className="mt-6 max-w-md text-sm text-muted-foreground">
+            {activeTab === 0 && "Semua kebutuhan operasional kantor, dari item harian hingga custom branding."}
+            {activeTab === 1 && "Proofing terarah, produksi terpantau, dan kualitas cetak yang konsisten."}
+            {activeTab === 2 && "Bahan, ukuran, dan finishing yang dikurasi sesuai identitas tim Anda."}
+          </p>
+        </div>
+        <div className="scrollbar-hidden relative z-10 flex items-center gap-2 overflow-x-auto border-t border-border bg-card/70 p-3 backdrop-blur-xl">
+          {productItems.map(({ icon: ItemIcon, label }) => (
+            <span key={label} className="inline-flex shrink-0 items-center gap-2 rounded-full border border-border bg-card px-4 py-2 text-xs font-semibold">
+              <ItemIcon size={14} className="text-primary" /> {label}
+            </span>
+          ))}
+          <Button href="#kontak" className="ml-auto shrink-0 !min-h-10 !px-5">
+            Mulai Pengadaan
+          </Button>
+        </div>
+      </div>
+    </section>
+  );
 }
 
-function HeroArtwork() {
+function DashboardPreview() {
   return (
-    <div
-      className="relative min-h-[450px] overflow-hidden rounded-[2px] bg-[#d8c9b6] lg:min-h-[590px]"
-      aria-label="Ilustrasi pilihan sampel produk Kanaughi"
-      role="img"
-    >
-      <div className="absolute inset-x-0 top-0 flex items-center justify-between border-b border-foreground/15 px-6 py-5 text-[11px] font-bold uppercase tracking-[0.16em]">
-        <span>Sample desk / 001</span>
-        <span>Bekasi, ID</span>
-      </div>
-
-      <div className="absolute left-[10%] top-[24%] h-[45%] w-[45%] -rotate-6 bg-[#f7f2eb] p-5 shadow-[0_22px_50px_rgba(47,39,31,0.16)] sm:p-7">
-        <div className="mb-8 flex items-center justify-between border-b border-[#2e2b27]/20 pb-3 text-[9px] font-bold uppercase tracking-widest">
-          <span>Brief</span>
-          <span>24.06</span>
+    <div className="relative mt-8 aspect-[16/11] overflow-hidden rounded-3xl border border-border shadow-sm lg:aspect-video">
+      <img src={warehouseImage} alt="Gudang perlengkapan kantor Kanaughi yang tertata rapi" className="absolute inset-0 size-full object-cover" />
+      <div className="absolute inset-0 bg-gradient-to-tr from-slate-overlay/70 via-slate-overlay/20 to-transparent" />
+      <div className="absolute inset-x-4 bottom-4 grid gap-3 rounded-2xl border border-white/40 bg-white/75 p-4 shadow-glass backdrop-blur-3xl sm:inset-x-auto sm:bottom-6 sm:left-6 sm:w-[520px] sm:grid-cols-[1fr_1.2fr] sm:p-5">
+        <div className="grid grid-cols-3 gap-2 sm:grid-cols-1">
+          {[["Waktu Respon", "< 4 Jam"], ["Akurasi", "99.2%"], ["Ketepatan", "98.7%"]].map(([label, value]) => (
+            <div key={label} className="rounded-xl bg-white/70 p-3">
+              <p className="text-[10px] font-bold uppercase tracking-wider text-slate-500">{label}</p>
+              <p className="mt-1 font-mono text-base font-bold text-slate-900">{value}</p>
+            </div>
+          ))}
         </div>
-        <p className="font-serif text-2xl leading-[1.05] tracking-[-0.03em] text-[#2e2b27] sm:text-4xl">
-          Kebutuhan kantor,
-          <br />
-          dibuat lebih ringkas.
-        </p>
-        <div className="absolute bottom-5 left-5 right-5 flex gap-2 sm:bottom-7 sm:left-7 sm:right-7">
-          <span className="h-1 flex-1 bg-[#a94f38]" />
-          <span className="h-1 flex-1 bg-[#6d7561]" />
-          <span className="h-1 flex-1 bg-[#d5ae62]" />
+        <div className="rounded-xl bg-slate-950 p-4 text-white">
+          <div className="mb-5 flex items-center justify-between">
+            <div>
+              <p className="text-[10px] uppercase tracking-widest text-slate-400">Pesanan aktif</p>
+              <p className="mt-1 text-sm font-semibold">PO-24018</p>
+            </div>
+            <span className="rounded-full bg-emerald-500/20 px-2.5 py-1 text-[10px] font-bold text-emerald-300">ON TRACK</span>
+          </div>
+          <div className="flex h-20 items-end gap-2">
+            {[35, 54, 43, 78, 64, 92, 82].map((height, i) => (
+              <span key={i} style={{ height: `${height}%` }} className="flex-1 rounded-t bg-gradient-to-t from-blue-500 to-emerald-400" />
+            ))}
+          </div>
+          <div className="mt-4 flex items-center gap-2 text-xs text-slate-300">
+            <Truck size={14} className="text-emerald-300" /> Estimasi tiba 14 Juni, 10:00
+          </div>
         </div>
-      </div>
-
-      <div className="absolute bottom-[13%] right-[10%] h-[39%] w-[37%] rotate-6 bg-[#a94f38] p-5 text-[#fffaf4] shadow-[0_22px_50px_rgba(47,39,31,0.18)] sm:p-7">
-        <Shirt className="mb-8 opacity-90" size={34} strokeWidth={1.4} />
-        <p className="text-[10px] font-bold uppercase tracking-[0.18em]">
-          Custom uniform
-        </p>
-        <p className="mt-2 font-serif text-3xl leading-none tracking-[-0.04em]">
-          Tim Anda,
-          <br />
-          satu identitas.
-        </p>
-      </div>
-
-      <div className="absolute bottom-6 left-6 grid size-20 place-items-center rounded-full border border-foreground/25 bg-[#d5ae62] text-[10px] font-bold uppercase tracking-widest sm:size-24">
-        <span className="-rotate-12 text-center">
-          Made to
-          <br />
-          brief
-        </span>
       </div>
     </div>
   );
@@ -237,327 +296,241 @@ function HeroArtwork() {
 function App() {
   return (
     <div className="min-h-screen overflow-x-hidden bg-background font-sans text-foreground selection:bg-primary selection:text-primary-foreground">
-      <a
-        href="#main-content"
-        className="fixed left-4 top-4 z-[100] -translate-y-24 bg-foreground px-4 py-3 font-bold text-background focus:translate-y-0"
-      >
+      <a href="#main-content" className="fixed left-4 top-3 z-[100] -translate-y-20 rounded-lg bg-primary px-4 py-3 text-sm font-semibold text-primary-foreground focus:translate-y-0">
         Lewati ke konten utama
       </a>
-
       <Header />
 
       <main id="main-content">
-        <section
-          id="beranda"
-          className="mx-auto grid max-w-[1360px] gap-12 px-5 pb-16 pt-14 sm:px-8 sm:pt-20 lg:grid-cols-[1.07fr_0.93fr] lg:items-center lg:gap-16 lg:px-12 lg:pb-24 lg:pt-24"
-        >
-          <div>
-            <div className="mb-8 flex items-center gap-3 text-xs font-bold uppercase tracking-[0.17em] text-[#743523]">
-              <span className="h-px w-9 bg-primary" />
-              Pengadaan B2B · Bekasi
+        <section id="beranda" className="mx-auto grid max-w-shell gap-12 px-gutter pb-16 pt-36 lg:grid-cols-12 lg:gap-8 lg:pb-20 lg:pt-44">
+          <div className="lg:col-span-7">
+            <span className="mb-6 inline-flex items-center gap-2 rounded-full border border-border bg-card px-3 py-1.5 text-xs font-semibold text-muted-foreground">
+              <Sparkles size={13} className="text-accent" /> Procurement partner untuk Jabodetabek
+            </span>
+            <h1 className="text-balance text-[clamp(3.25rem,6.6vw,5.25rem)] font-semibold leading-[0.96] tracking-[-0.065em]">
+              Pengadaan B2B One-Stop: ATK, Cetak, Seragam — Dikurasi, Dikirim, Selesai
+            </h1>
+            <p className="mt-8 max-w-2xl text-lg leading-relaxed text-muted-foreground sm:text-xl">
+              Satu PIC handle ATK, media cetak, seragam. Brief hari ini, penawaran &lt; 1 hari kerja.
+            </p>
+            <div className="mt-9 flex flex-col gap-3 sm:flex-row">
+              <Button href="#kontak">Kirim Brief → Penawaran &lt; 1 Hari</Button>
+              <Button href="#cara-kerja" secondary>Lihat Cara Kerja</Button>
             </div>
-            <h1 className="max-w-[780px] font-serif text-[clamp(3.65rem,7.2vw,7.8rem)] font-semibold leading-[0.86] tracking-[-0.055em]"><span className="">Dari brief,<br></br><span></span>jadi beres.</span><br /></h1>
-            <div className="mt-10 grid gap-8 border-t border-border pt-8 sm:grid-cols-[1fr_auto] sm:items-end">
-              <p className="max-w-[570px] text-base leading-7 text-muted-foreground sm:text-lg">
-                Alat kantor, media cetak, dan seragam bisnis—dikurasi sesuai
-                kebutuhan, anggaran, dan tenggat perusahaan Anda.
-              </p>
-              <a
-                href="#kontak"
-                className="group inline-flex min-h-14 items-center justify-center gap-3 rounded-full bg-primary px-7 font-bold text-primary-foreground transition-transform hover:-translate-y-1 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary"
-              >
-                Kirim kebutuhan
-                <ArrowRight
-                  size={18}
-                  className="transition-transform group-hover:translate-x-1"
-                />
-              </a>
-            </div>
-            <p className="mt-5 flex items-center gap-2 text-sm text-muted-foreground">
-              <Check size={16} className="text-primary" aria-hidden="true" />
-              Bisa mulai dari daftar sederhana atau spesifikasi lengkap.
+          </div>
+          <div className="flex items-end lg:col-span-4 lg:col-start-9 lg:pb-2">
+            <p className="max-w-sm border-l-2 border-accent pl-5 text-lg leading-relaxed text-muted-foreground lg:ml-auto">
+              Kurangi koordinasi vendor. Kami menyatukan sourcing, produksi, QC, dan pengiriman dalam satu alur yang transparan.
             </p>
           </div>
-          <HeroArtwork />
         </section>
 
-        <section className="border-y border-border bg-[#eee6dc]" aria-label="Keunggulan layanan">
-          <div className="mx-auto grid max-w-[1360px] grid-cols-2 px-5 sm:px-8 lg:grid-cols-4 lg:px-12">
-            {trustItems.map((item, index) => {
-              const Icon = item.icon;
-              return (
-                <div
-                  key={item.label}
-                  className={`py-7 sm:flex sm:items-center sm:gap-4 lg:py-8 ${
-                    index % 2 !== 0 ? "border-l border-border pl-5 sm:pl-7" : ""
-                  } ${index > 0 ? "lg:border-l lg:border-border lg:pl-8" : ""}`}
-                >
-                  <Icon
-                    size={23}
-                    strokeWidth={1.5}
-                    className="mb-3 text-primary sm:mb-0"
-                    aria-hidden="true"
-                  />
-                  <div>
-                    <p className="text-xs font-bold uppercase tracking-[0.12em] text-muted-foreground">
-                      {item.label}
-                    </p>
-                    <p className="mt-1 font-serif text-xl font-semibold">
-                      {item.value}
-                    </p>
-                  </div>
-                </div>
-              );
-            })}
+        <ProductPanel />
+
+        <section className="mx-auto max-w-shell px-gutter py-16">
+          <p className="text-center text-[11px] font-bold uppercase tracking-[0.19em] text-muted-foreground">
+            Dipercaya 50+ perusahaan <span className="mx-3 text-accent">•</span> 10.000+ barang dikirim <span className="mx-3 text-accent">•</span> Rating 4.9/5
+          </p>
+        </section>
+
+        <section aria-label="Klien Kanaughi" className="overflow-hidden border-y border-border bg-card py-9">
+          <div className="marquee-track flex w-max items-center gap-24 whitespace-nowrap hover:[animation-play-state:paused]">
+            {[...Array(2)].flatMap((_, repeat) =>
+              ["NUSANTARA", "ARUNIKA", "SATU DATA", "KARYA+", "VERDA", "ATLAS", "MONO"].map((name, index) => (
+                <span key={`${repeat}-${name}`} aria-hidden={repeat === 1} className="inline-flex items-center gap-3 text-xl font-black italic tracking-tight text-foreground/20">
+                  <BadgeCheck size={23} /> {name}
+                </span>
+              )),
+            )}
           </div>
         </section>
 
-        <section
-          id="kategori"
-          className="mx-auto max-w-[1360px] px-5 py-24 sm:px-8 sm:py-32 lg:px-12"
-        >
-          <div className="mb-14 grid gap-8 lg:grid-cols-2 lg:items-end">
+        <section id="layanan" className="section-space mx-auto max-w-shell px-gutter">
+          <div className="grid gap-10 lg:grid-cols-2 lg:items-end">
             <div>
-              <p className="mb-5 text-xs font-bold uppercase tracking-[0.17em] text-[#743523]">
-                01 / Kategori
-              </p>
-              <h2 className="font-serif text-[clamp(2.8rem,5vw,5.7rem)] font-semibold leading-[0.94] tracking-[-0.045em]">
-                Satu pintu untuk
-                <br />
-                kebutuhan bisnis.
+              <SectionLabel>Platform Terpadu</SectionLabel>
+              <h2 className="text-balance text-[clamp(2.75rem,5vw,4rem)] font-semibold leading-[1.02] tracking-[-0.055em]">
+                Tiga Kategori, Satu Platform Terpadu
               </h2>
             </div>
-            <p className="max-w-lg text-base leading-7 text-muted-foreground lg:justify-self-end">
-              Tidak perlu berpindah vendor untuk setiap kebutuhan. Kami bantu
-              mulai dari pemilihan spesifikasi sampai koordinasi pengiriman.
+            <p className="max-w-lg text-lg leading-relaxed text-muted-foreground lg:ml-auto">
+              Mulai dari permintaan sederhana sampai pengadaan lintas divisi. Semua dikoordinasikan satu tim, satu timeline.
             </p>
           </div>
+          <div className="mt-12 grid gap-5 md:grid-cols-2">
+            <article className="group relative flex h-[300px] overflow-hidden rounded-3xl bg-gradient-to-br from-indigo-700 to-violet-500 p-8 text-white">
+              <div className="absolute -right-12 -top-12 size-56 rounded-full bg-white/15 blur-2xl transition-opacity group-hover:opacity-50" />
+              <Package size={42} strokeWidth={1.5} />
+              <div className="mt-auto">
+                <p className="mb-2 text-xs font-bold uppercase tracking-widest text-white/70">Operasional Harian</p>
+                <h3 className="text-3xl font-semibold tracking-tight">Perlengkapan Kantor</h3>
+              </div>
+            </article>
+            <article className="group relative flex h-[300px] overflow-hidden rounded-3xl bg-gradient-to-br from-emerald-700 to-teal-400 p-8 text-white">
+              <div className="absolute -bottom-12 -right-12 size-56 rounded-full bg-white/15 blur-2xl transition-opacity group-hover:opacity-50" />
+              <Printer size={42} strokeWidth={1.5} />
+              <div className="mt-auto">
+                <p className="mb-2 text-xs font-bold uppercase tracking-widest text-white/70">Print on Demand</p>
+                <h3 className="text-3xl font-semibold tracking-tight">Media Percetakan</h3>
+              </div>
+            </article>
+          </div>
+          <DashboardPreview />
+        </section>
 
-          <div className="grid border-l border-t border-border md:grid-cols-3">
-            {categories.map((category) => {
-              const Icon = category.icon;
-              return (
-                <a
-                  key={category.number}
-                  href="#kontak"
-                  className="group relative flex min-h-[480px] flex-col overflow-hidden border-b border-r border-border bg-card p-7 transition-colors duration-300 hover:bg-[#fffaf4] focus-visible:z-10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary sm:p-9"
-                >
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs font-bold tracking-[0.16em]">
-                      {category.number}
-                    </span>
-                    <ArrowDownRight
-                      size={22}
-                      className="transition-transform duration-300 group-hover:rotate-[-45deg]"
-                      aria-hidden="true"
-                    />
-                  </div>
-
-                  <div
-                    className={`relative my-10 grid h-40 place-items-center overflow-hidden ${category.tone}`}
-                  >
-                    <div className="absolute h-28 w-28 rounded-full border border-white/35 transition-transform duration-500 group-hover:scale-[1.45]" />
-                    <Icon
-                      size={62}
-                      strokeWidth={1}
-                      className="relative text-[#28241f] transition-transform duration-300 group-hover:-translate-y-1"
-                      aria-hidden="true"
-                    />
-                  </div>
-
-                  <div className="mt-auto">
-                    <h3 className="font-serif text-[2rem] font-semibold leading-none tracking-[-0.035em]">
-                      {category.title}
-                    </h3>
-                    <p className="mt-4 leading-6 text-muted-foreground">
-                      {category.description}
-                    </p>
-                    <p className="mt-7 border-t border-border pt-4 text-xs font-bold uppercase tracking-[0.13em] text-[#743523]">
-                      {category.detail}
-                    </p>
-                  </div>
-                </a>
-              );
-            })}
+        <section className="section-space border-y border-border bg-card">
+          <div className="mx-auto max-w-shell px-gutter">
+            <SectionLabel>Perlengkapan Kantor</SectionLabel>
+            <h2 className="max-w-3xl text-balance text-[clamp(2.5rem,4.2vw,3rem)] font-semibold leading-[1.05] tracking-[-0.045em]">
+              ATK, Notebook Custom, Pantry — Satu Pengadaan
+            </h2>
+            <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+              {officeItems.map((item, index) => (
+                <div key={item.label} className={index < 2 ? "lg:col-span-2" : ""}>
+                  <ServiceTile {...item} large={index < 2} />
+                </div>
+              ))}
+            </div>
           </div>
         </section>
 
-        <section id="tentang" className="bg-[#2b3029] text-[#f7f2eb]">
-          <div className="mx-auto grid max-w-[1360px] lg:grid-cols-[0.9fr_1.1fr]">
-            <div className="relative min-h-[480px] overflow-hidden border-b border-white/15 p-8 sm:p-12 lg:min-h-[650px] lg:border-b-0 lg:border-r">
-              <p className="text-xs font-bold uppercase tracking-[0.17em] text-[#d9b19f]">
-                Dibangun untuk bisnis
-              </p>
-              <div className="absolute -bottom-14 -left-8 font-serif text-[15rem] leading-none text-white/[0.035] sm:text-[22rem]">
-                K
+        <section className="section-space mx-auto max-w-shell px-gutter">
+          <SectionLabel>Media Percetakan</SectionLabel>
+          <h2 className="max-w-4xl text-balance text-[clamp(2.5rem,4.2vw,3rem)] font-semibold leading-[1.05] tracking-[-0.045em]">
+            Kartu Nama, Kemasan, Banner — Cetak Satuan & Volume
+          </h2>
+          <div className="mt-12 grid gap-5 lg:grid-cols-2">
+            <article className="flex min-h-[450px] flex-col rounded-3xl border border-border bg-panel p-6 sm:p-8">
+              <div className="flex items-center gap-3">
+                <div className="grid size-11 place-items-center rounded-xl bg-primary text-primary-foreground"><MessageCircle size={20} /></div>
+                <div><p className="font-semibold">Desain & Proofing</p><p className="text-xs text-muted-foreground">Feedback dalam satu alur</p></div>
               </div>
-              <div className="absolute inset-x-8 bottom-9 grid grid-cols-2 gap-3 sm:inset-x-12">
-                {["Spesifikasi jelas", "Update progres", "Harga transparan", "Koordinasi ringkas"].map(
-                  (item) => (
-                    <div
-                      key={item}
-                      className="flex min-h-24 flex-col justify-between border border-white/20 bg-white/[0.04] p-4 backdrop-blur-sm"
-                    >
-                      <Check size={16} className="text-[#d9b19f]" />
-                      <span className="text-sm font-semibold">{item}</span>
-                    </div>
-                  ),
-                )}
-              </div>
-            </div>
-
-            <div className="flex flex-col justify-center px-5 py-20 sm:px-12 sm:py-24 lg:px-20">
-              <p className="mb-6 text-xs font-bold uppercase tracking-[0.17em] text-[#d9b19f]">
-                Kenapa Kanaughi
-              </p>
-              <h2 className="max-w-[700px] font-serif text-[clamp(3rem,5.6vw,6.3rem)] font-semibold leading-[0.9] tracking-[-0.05em]">
-                Pengadaan yang terasa lebih manusiawi.
-              </h2>
-              <p className="mt-9 max-w-xl text-lg leading-8 text-white/68">
-                Anda berkomunikasi dengan satu tim yang memahami brief, bukan
-                sekadar meneruskan daftar belanja. Setiap opsi dijelaskan agar
-                keputusan lebih cepat dan tepat.
-              </p>
-              <div className="mt-11 grid gap-7 border-t border-white/20 pt-8 sm:grid-cols-2">
-                <div>
-                  <p className="font-serif text-4xl font-semibold">Satu PIC</p>
-                  <p className="mt-2 text-sm leading-6 text-white/60">
-                    Untuk koordinasi lintas kategori dan pengiriman.
-                  </p>
+              <div className="my-auto space-y-4 py-10">
+                <div className="max-w-[82%] rounded-2xl rounded-bl-md bg-card p-4 shadow-sm">
+                  <p className="text-sm leading-relaxed">Untuk kartu nama, bisakah logo dibuat spot UV dan nama memakai silver foil?</p>
+                  <p className="mt-2 text-[10px] text-muted-foreground">Anda · 09:12</p>
                 </div>
-                <div>
-                  <p className="font-serif text-4xl font-semibold">Fleksibel</p>
-                  <p className="mt-2 text-sm leading-6 text-white/60">
-                    Produk standar maupun kebutuhan custom.
-                  </p>
+                <div className="ml-auto max-w-[82%] rounded-2xl rounded-br-md bg-primary p-4 text-primary-foreground shadow-sm">
+                  <p className="text-sm leading-relaxed">Bisa. Kami siapkan digital proof dengan dua opsi ketebalan kertas hari ini.</p>
+                  <p className="mt-2 text-[10px] text-blue-100">Kanaughi · 09:18</p>
                 </div>
               </div>
-            </div>
-          </div>
-        </section>
-
-        <section
-          id="cara-kerja"
-          className="mx-auto max-w-[1360px] px-5 py-24 sm:px-8 sm:py-32 lg:px-12"
-        >
-          <div className="grid gap-12 lg:grid-cols-[0.68fr_1.32fr] lg:gap-20">
-            <div>
-              <p className="mb-5 text-xs font-bold uppercase tracking-[0.17em] text-[#743523]">
-                02 / Cara kerja
-              </p>
-              <h2 className="font-serif text-[clamp(3rem,5vw,5.5rem)] font-semibold leading-[0.92] tracking-[-0.05em]">
-                Jelas sejak langkah pertama.
-              </h2>
-              <p className="mt-7 max-w-sm leading-7 text-muted-foreground">
-                Proses yang sederhana, tanpa mengurangi detail yang penting
-                untuk kualitas dan ketepatan waktu.
-              </p>
-            </div>
-
-            <ol className="border-t border-border">
-              {steps.map((step) => {
-                const Icon = step.icon;
-                return (
-                  <li
-                    key={step.number}
-                    className="group grid gap-5 border-b border-border py-7 sm:grid-cols-[54px_1fr_1.2fr_auto] sm:items-center sm:gap-7"
-                  >
-                    <span className="text-xs font-bold tracking-[0.16em] text-primary">
-                      {step.number}
-                    </span>
-                    <h3 className="font-serif text-[1.7rem] font-semibold tracking-[-0.03em]">
-                      {step.title}
-                    </h3>
-                    <p className="max-w-md text-sm leading-6 text-muted-foreground">
-                      {step.description}
-                    </p>
-                    <span className="grid size-11 place-items-center rounded-full border border-border transition-colors group-hover:border-primary group-hover:bg-primary group-hover:text-primary-foreground">
-                      <Icon size={19} strokeWidth={1.6} aria-hidden="true" />
-                    </span>
-                  </li>
-                );
-              })}
-            </ol>
-          </div>
-        </section>
-
-        <section id="kontak" className="px-3 pb-3 sm:px-5 sm:pb-5">
-          <div className="relative overflow-hidden bg-primary px-5 py-20 text-primary-foreground sm:px-12 sm:py-24 lg:px-20 lg:py-28">
-            <div className="absolute -right-16 -top-28 size-[420px] rounded-full border border-white/15" />
-            <div className="absolute -right-4 -top-16 size-[300px] rounded-full border border-white/15" />
-            <div className="relative mx-auto grid max-w-[1200px] gap-12 lg:grid-cols-[1.25fr_0.75fr] lg:items-end">
-              <div>
-                <p className="mb-6 text-xs font-bold uppercase tracking-[0.17em] text-white/70">
-                  Siap mulai?
-                </p>
-                <h2 className="max-w-[850px] font-serif text-[clamp(3.3rem,7vw,7.8rem)] font-semibold leading-[0.87] tracking-[-0.055em]">
-                  Kirim brief.
-                  <br />
-                  Kami lanjutkan.
-                </h2>
+              <div className="flex items-center gap-2 text-xs font-semibold text-muted-foreground"><CheckCircle2 size={15} className="text-accent" /> Semua revisi terdokumentasi</div>
+            </article>
+            <article className="flex min-h-[450px] flex-col rounded-3xl border border-border bg-slate-950 p-6 text-white sm:p-8">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3"><div className="grid size-11 place-items-center rounded-xl bg-emerald-500/20 text-emerald-300"><BarChart3 size={20} /></div><div><p className="font-semibold">Produksi & QC</p><p className="text-xs text-slate-400">Live production overview</p></div></div>
+                <span className="size-2 rounded-full bg-emerald-400 shadow-status" />
               </div>
-              <div className="lg:pb-2">
-                <p className="mb-8 max-w-md text-lg leading-8 text-white/80">
-                  Ceritakan kebutuhan perusahaan Anda. Tim Kanaughi akan
-                  menghubungi Anda untuk melengkapi detail dan menyiapkan opsi.
-                </p>
-                <a
-                  href="mailto:halo@kanaughi.co.id?subject=Permintaan%20Penawaran%20Pengadaan"
-                  className="group inline-flex min-h-16 w-full items-center justify-between rounded-full bg-[#f7f2eb] px-7 font-bold text-[#2e2b27] transition-transform hover:-translate-y-1 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white sm:w-auto sm:min-w-[290px]"
+              <div className="my-auto">
+                <div className="mb-8 grid grid-cols-3 gap-3">
+                  {[["PROGRESS", "78%"], ["QC PASS", "99.4%"], ["BATCH", "03/04"]].map(([label, value]) => (
+                    <div key={label} className="rounded-xl border border-white/10 bg-white/5 p-3"><p className="text-[9px] tracking-widest text-slate-400">{label}</p><p className="mt-2 font-mono text-lg font-bold">{value}</p></div>
+                  ))}
+                </div>
+                <div className="flex h-36 items-end gap-3 border-b border-white/10">
+                  {[42, 60, 51, 75, 67, 88, 96, 84, 100].map((height, i) => (
+                    <span key={i} style={{ height: `${height}%` }} className="flex-1 rounded-t bg-gradient-to-t from-blue-700 to-emerald-400 opacity-90" />
+                  ))}
+                </div>
+              </div>
+              <p className="text-xs text-slate-400">Diperbarui otomatis · 2 menit lalu</p>
+            </article>
+          </div>
+        </section>
+
+        <section className="section-space border-y border-border bg-card">
+          <div className="mx-auto max-w-shell px-gutter">
+            <SectionLabel>Seragam & Konveksi</SectionLabel>
+            <h2 className="max-w-4xl text-balance text-[clamp(2.5rem,4.2vw,3rem)] font-semibold leading-[1.05] tracking-[-0.045em]">
+              Kemeja, Kaos, Jaket, Tote Bag — Ukuran & Bahan Custom
+            </h2>
+            <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+              {uniformItems.map(({ icon: UniformIcon, label, caption }) => (
+                <article key={label} className="group rounded-2xl border border-border bg-background p-6 transition-all hover:-translate-y-1 hover:shadow-sm">
+                  <div className="mb-16 grid size-12 place-items-center rounded-xl bg-panel text-primary transition-colors group-hover:bg-primary group-hover:text-primary-foreground"><UniformIcon size={23} /></div>
+                  <h3 className="text-lg font-semibold">{label}</h3>
+                  <p className="mt-1 text-sm text-muted-foreground">{caption}</p>
+                </article>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section id="cara-kerja" className="section-space mx-auto max-w-shell px-gutter">
+          <SectionLabel>Cara Kerja</SectionLabel>
+          <div className="grid gap-8 lg:grid-cols-[0.8fr_1.2fr]">
+            <h2 className="max-w-md text-balance text-[clamp(2.75rem,5vw,4rem)] font-semibold leading-[1.02] tracking-[-0.055em]">Dari brief sampai barang tiba.</h2>
+            <div className="grid sm:grid-cols-2">
+              {steps.map(({ icon: StepIcon, title, text }, index) => (
+                <article
+                  key={title}
+                  className={`border-b border-border py-7 sm:p-7 ${
+                    index % 2 === 0 ? "sm:border-r" : ""
+                  } ${index > 1 ? "sm:border-b-0" : ""}`}
                 >
-                  Minta penawaran
-                  <ArrowRight
-                    size={20}
-                    className="transition-transform group-hover:translate-x-1"
-                  />
-                </a>
-                <p className="mt-5 text-sm text-white/65">
-                  atau email ke{" "}
-                  <a
-                    className="underline decoration-white/40 underline-offset-4 hover:decoration-white"
-                    href="mailto:halo@kanaughi.co.id"
-                  >
-                    halo@kanaughi.co.id
-                  </a>
-                </p>
+                  <div className="mb-10 flex items-center justify-between">
+                    <span className="font-mono text-sm font-bold text-primary">0{index + 1}</span>
+                    <StepIcon size={22} className="text-accent" />
+                  </div>
+                  <h3 className="text-xl font-semibold tracking-tight">{title}</h3>
+                  <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{text}</p>
+                </article>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section id="keunggulan" className="border-y border-border bg-panel py-14">
+          <div className="mx-auto flex max-w-shell flex-wrap items-center justify-center gap-x-16 gap-y-8 px-gutter">
+            {["BRI", "TELKOM", "SILOAM", "RUANGGURU", "TRAVELOKA", "ASTRA"].map((logo) => (
+              <span key={logo} className="font-black tracking-tight text-foreground/35 grayscale transition-opacity hover:text-foreground hover:opacity-100">{logo}</span>
+            ))}
+          </div>
+        </section>
+
+        <section id="harga" className="section-space mx-auto max-w-shell px-gutter">
+          <div className="grid gap-5 lg:grid-cols-2">
+            {[
+              ["“Satu PIC Kanaughi membuat pengadaan lintas divisi jauh lebih ringkas. Penawarannya jelas dan pengirimannya tepat waktu.”", "Maya Pradipta", "Office Manager · Arunika Group"],
+              ["“Mereka cepat menangkap brief, termasuk detail material cetak dan ukuran seragam yang cukup kompleks.”", "Fajar Nugraha", "Procurement Lead · Atlas Digital"],
+            ].map(([quote, name, role]) => (
+              <figure key={name} className="rounded-3xl border border-border bg-card p-7 sm:p-9">
+                <div className="mb-8 flex gap-1 text-star" aria-label="5 dari 5 bintang">{[0, 1, 2, 3, 4].map((i) => <Star key={i} size={16} fill="currentColor" />)}</div>
+                <blockquote className="text-xl font-medium leading-relaxed tracking-tight sm:text-2xl">{quote}</blockquote>
+                <figcaption className="mt-9 flex items-center gap-3">
+                  <span className="grid size-11 place-items-center rounded-full bg-primary text-sm font-bold text-primary-foreground">{name.split(" ").map((word) => word[0]).join("")}</span>
+                  <span><span className="block text-sm font-semibold">{name}</span><span className="block text-xs text-muted-foreground">{role}</span></span>
+                </figcaption>
+              </figure>
+            ))}
+          </div>
+          <p className="mt-7 text-center text-sm text-muted-foreground">Tidak ada biaya platform. Harga transparan berdasarkan spesifikasi, volume, dan tenggat kebutuhan Anda.</p>
+        </section>
+
+        <section id="kontak" className="mx-auto max-w-shell px-gutter pb-16">
+          <div className="relative overflow-hidden rounded-3xl bg-primary px-6 py-20 text-center text-primary-foreground sm:px-12 sm:py-28">
+            <span className="absolute -left-20 -top-20 size-72 rounded-full bg-white/10 blur-3xl" />
+            <span className="absolute -bottom-28 -right-20 size-80 rounded-full bg-accent/30 blur-3xl" />
+            <div className="relative">
+              <span className="text-xs font-bold uppercase tracking-[0.18em] text-blue-100">Mulai hari ini</span>
+              <h2 className="mx-auto mt-5 max-w-3xl text-balance text-[clamp(2.5rem,5vw,3.5rem)] font-semibold leading-tight tracking-[-0.045em]">Siap Memulai Pengadaan Lebih Mudah?</h2>
+              <p className="mx-auto mt-5 max-w-xl text-blue-100">Bagikan kebutuhan Anda. Tim kami akan merespons dengan opsi dan penawaran awal dalam satu hari kerja.</p>
+              <div className="mt-9 flex flex-col justify-center gap-3 sm:flex-row">
+                <a href="mailto:halo@kanaughi.id" className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-white px-6 text-sm font-semibold text-primary transition-transform hover:-translate-y-0.5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white">Kirim Brief Sekarang <ArrowRight size={16} /></a>
+                <a href="mailto:halo@kanaughi.id" className="inline-flex min-h-12 items-center justify-center rounded-full border border-white/30 px-6 text-sm font-semibold transition-colors hover:bg-white/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white">Hubungi Tim Kami</a>
               </div>
             </div>
           </div>
         </section>
       </main>
 
-      <footer className="mx-auto max-w-[1360px] px-5 pb-10 pt-14 sm:px-8 lg:px-12">
-        <div className="grid gap-10 border-b border-border pb-12 md:grid-cols-[1fr_auto_auto] md:gap-20">
-          <div>
-            <Wordmark />
-            <p className="mt-5 max-w-sm text-sm leading-6 text-muted-foreground">
-              Pengadaan perlengkapan kantor, media cetak, dan seragam untuk
-              perusahaan di Bekasi dan Jabodetabek.
-            </p>
-          </div>
-          <div>
-            <p className="mb-4 text-xs font-bold uppercase tracking-[0.14em] text-[#743523]">
-              Jelajahi
-            </p>
-            <div className="flex flex-col gap-3 text-sm font-semibold">
-              {navItems.map((item) => (
-                <a key={item.href} href={item.href} className="hover:text-primary">
-                  {item.label}
-                </a>
-              ))}
-            </div>
-          </div>
-          <div>
-            <p className="mb-4 text-xs font-bold uppercase tracking-[0.14em] text-[#743523]">
-              Lokasi
-            </p>
-            <p className="text-sm font-semibold">Bekasi, Jawa Barat</p>
-            <p className="mt-2 text-sm text-muted-foreground">Melayani Jabodetabek</p>
-          </div>
-        </div>
-        <div className="flex flex-col gap-3 pt-7 text-xs text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
-          <p>© {new Date().getFullYear()} Kanaughi. Hak cipta dilindungi.</p>
-          <p>Pengadaan bisnis, tanpa dibuat rumit.</p>
+      <footer className="border-t border-border bg-card">
+        <div className="mx-auto flex max-w-shell flex-col gap-8 px-gutter py-10 sm:flex-row sm:items-center sm:justify-between">
+          <div><a href="#beranda" className="text-xl font-bold tracking-tighter">Kanaughi<span className="text-accent">.</span></a><p className="mt-2 text-xs text-muted-foreground">© {new Date().getFullYear()} Kanaughi. Bekasi, Indonesia.</p></div>
+          <nav className="flex flex-wrap gap-x-6 gap-y-3 text-sm text-muted-foreground" aria-label="Navigasi footer">
+            {["Twitter", "LinkedIn", "Syarat", "Privasi"].map((item) => <a key={item} href="#kontak" className="transition-colors hover:text-primary">{item}</a>)}
+          </nav>
         </div>
       </footer>
     </div>
