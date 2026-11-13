@@ -1,0 +1,284 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Kanaughi — partner pengadaan barang untuk perusahaan dan kebutuhan event di Bekasi.">
+  <title>Kanaughi — Pengadaan sesuai brief</title>
+  <style>
+    .skip-link { position:absolute; left:16px; top:-60px; z-index:20; padding:12px 16px; background:var(--ink); color:var(--bg); }
+    .skip-link:focus { top:16px; }
+    :root {
+      --bg: #f5f0e9;
+      --paper: #fbf9f5;
+      --ink: #26231f;
+      --muted: #625b54;
+      --line: #d9d0c6;
+      --accent: #a94f38;
+      --accent-dark: #743523;
+      --max: 1200px;
+      --gutter: clamp(20px, 5vw, 72px);
+      --serif: Georgia, "Times New Roman", serif;
+      --sans: Arial, Helvetica, sans-serif;
+      --ease: cubic-bezier(.2,0,0,1);
+    }
+    *, *::before, *::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; }
+    }
+    body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--sans); line-height: 1.6; }
+    a { color: inherit; }
+    a:focus-visible, button:focus-visible { outline: 3px solid var(--accent); outline-offset: 4px; }
+    .wrap { width: min(var(--max), calc(100% - 2 * var(--gutter))); margin: 0 auto; }
+    .eyebrow { margin: 0 0 16px; color: var(--accent-dark); font-size: 12px; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; }
+    h1, h2, h3, p { margin-top: 0; }
+    h1, h2, h3 { font-family: var(--serif); font-weight: 400; line-height: 1.08; }
+    h1 { max-width: 760px; margin-bottom: 24px; font-size: clamp(48px, 8vw, 104px); letter-spacing: -.04em; }
+    h2 { margin-bottom: 20px; font-size: clamp(36px, 5vw, 64px); letter-spacing: -.03em; }
+    h3 { margin-bottom: 12px; font-size: 28px; }
+    .muted { color: var(--muted); }
+    .placeholder { color: var(--accent-dark); font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+    .site-header { position: sticky; top: 0; z-index: 10; background: var(--bg); border-bottom: 1px solid var(--line); }
+    .nav { display: flex; align-items: center; justify-content: space-between; min-height: 76px; gap: 24px; }
+    .brand { display: inline-flex; flex-direction: column; align-items: flex-start; color: var(--ink); text-decoration: none; }
+    .wordmark { font-family: var(--serif); font-size: 28px; line-height: 1; }
+    .wordmark-note { margin-top: 5px; color: var(--muted); font-family: var(--sans); font-size: 9px; letter-spacing: .06em; line-height: 1; text-transform: uppercase; }
+    .nav-toggle { display: none; min-width: 44px; min-height: 44px; border: 1px solid var(--line); background: transparent; color: var(--ink); font: inherit; }
+    .nav-links { display: flex; align-items: center; gap: 28px; font-size: 14px; }
+    .nav-links a { text-decoration: none; }
+    .nav-links a:hover { color: var(--accent-dark); }
+    .button { display: inline-flex; align-items: center; justify-content: center; min-height: 48px; padding: 12px 20px; border: 1px solid var(--ink); border-radius: 3px; font-size: 14px; text-decoration: none; transition: background-color .2s var(--ease), color .2s var(--ease); }
+    .button:hover { transform: none; }
+    .button-primary { border-color: var(--accent); background: var(--accent); color: #fff; }
+    .button-primary:hover { background: var(--accent-dark); border-color: var(--accent-dark); }
+    .button-quiet { border-color: var(--line); }
+    .button-quiet:hover { background: var(--paper); color: var(--ink); border-color: var(--paper); }
+    .cta .button-quiet:hover { background: var(--paper); color: var(--ink); border-color: var(--paper); }
+    .contact-status { color: #d7c8bb; }
+    button:disabled { opacity: .55; cursor: not-allowed; transform: none; }
+    .hero { padding: clamp(72px, 12vw, 152px) 0 104px; }
+    .hero-grid { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(300px, .85fr); align-items: end; gap: clamp(40px, 8vw, 120px); }
+    .hero-copy p { max-width: 520px; font-size: 19px; }
+    .actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 32px; }
+    .product-visual { min-height: 520px; padding: 24px; background: var(--paper); border: 1px solid var(--line); position: relative; overflow: hidden; }
+    .product-stack { position: absolute; inset: 12% 10% 14%; }
+    .product-box { position: absolute; display: grid; place-items: end start; padding: 14px; color: var(--ink); text-align: left; border: 1px solid var(--line); }
+    .product-box strong { position: relative; z-index: 1; display: block; font-family: var(--serif); font-size: clamp(24px, 3vw, 42px); font-weight: 400; }
+    .product-box::before { content: ""; position: absolute; left: 50%; top: 50%; border: 1px solid var(--ink); background: var(--paper); transform: translate(-50%, -50%); }
+    .product-box:nth-child(1) { width: 42%; aspect-ratio: .78; left: 4%; top: 22%; background: #e8dccb; transform: rotate(-8deg); }
+    .product-box:nth-child(1)::before { width: 42%; height: 62%; background: #f2eadf; box-shadow: inset 8px 0 0 #d4c3ae; }
+    .product-box:nth-child(2) { width: 52%; aspect-ratio: 1.35; right: 0; top: 8%; background: #aeb7a4; transform: rotate(5deg); }
+    .product-box:nth-child(2)::before { width: 66%; height: 48%; box-shadow: -10px 8px 0 #f2f0e8; }
+    .product-box:nth-child(3) { width: 48%; aspect-ratio: .9; right: 10%; bottom: 2%; background: #c98670; transform: rotate(-4deg); }
+    .product-box:nth-child(3)::before { width: 46%; height: 62%; clip-path: polygon(20% 0, 40% 16%, 60% 16%, 80% 0, 100% 25%, 82% 38%, 75% 100%, 25% 100%, 18% 38%, 0 25%); }
+    .product-box .placeholder { position: relative; z-index: 1; display: block; margin-top: 8px; color: var(--accent-dark); font-size: 9px; }
+    .visual-caption { position: absolute; right: 24px; bottom: 20px; max-width: 180px; text-align: right; }
+    section { padding: clamp(72px, 10vw, 128px) 0; border-top: 1px solid var(--line); }
+    .intro-grid, .cta-grid { display: grid; grid-template-columns: .8fr 1.2fr; gap: 10%; }
+    .intro-copy { max-width: 660px; font-size: clamp(20px, 2.4vw, 30px); line-height: 1.35; }
+    .section-head { display: flex; justify-content: space-between; align-items: end; gap: 24px; margin-bottom: 48px; }
+    .section-head > p { max-width: 360px; margin-bottom: 8px; }
+    .category-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+    .product-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+    .category, .product { background: var(--paper); border: 1px solid var(--line); text-decoration: none; }
+    .category:hover, .product:hover { border-color: var(--accent); }
+    .category:focus-visible, .product:focus-visible { outline: 3px solid var(--accent); outline-offset: 4px; }
+    .category { min-height: 310px; padding: 20px; display: flex; flex-direction: column; justify-content: space-between; }
+    .category-visual { min-height: 112px; margin-bottom: 24px; display: grid; place-items: center; border: 1px solid var(--line); }
+    .category-visual { position: relative; overflow: hidden; place-items: end start; padding: 12px; }
+    .category-visual::before { content: ""; position: absolute; left: 50%; top: 50%; border: 1px solid var(--ink); background: var(--paper); transform: translate(-50%, -50%); }
+    .category-visual span { position: relative; z-index: 1; padding: 8px 0 0; color: var(--accent-dark); font-size: 10px; font-weight: 700; letter-spacing: .06em; text-align: left; }
+    .visual-atk { background: #e8dccb; }
+    .visual-atk::before { width: 24%; height: 72%; box-shadow: inset 7px 0 0 #d4c3ae; transform: translate(-50%, -50%) rotate(-7deg); }
+    .visual-cetak { background: #aeb7a4; }
+    .visual-cetak::before { width: 48%; height: 48%; box-shadow: -10px 8px 0 #f2f0e8; transform: translate(-50%, -50%) rotate(5deg); }
+    .visual-konveksi { background: #c98670; }
+    .visual-konveksi::before { width: 30%; height: 70%; clip-path: polygon(20% 0, 40% 16%, 60% 16%, 80% 0, 100% 25%, 82% 38%, 75% 100%, 25% 100%, 18% 38%, 0 25%); }
+    .text-link { display: inline-flex; align-items: center; min-height: 44px; color: var(--accent-dark); font-size: 14px; font-weight: 700; text-decoration: underline; text-underline-offset: 4px; }
+    .category:hover .text-link, .product:hover .text-link { color: var(--ink); }
+    .product { display: flex; flex-direction: column; text-decoration: none; }
+    .product-body { display: flex; flex-direction: column; align-items: flex-start; min-height: 230px; }
+    .product-body .text-link { margin-top: auto; }
+    .category:nth-child(2) { transform: translateY(32px); }
+    .category-number { color: var(--accent); font-family: var(--serif); font-size: 54px; line-height: 1; }
+    .category p, .product p { max-width: 300px; color: var(--muted); }
+    .product-image { position: relative; overflow: hidden; aspect-ratio: 1.15 / 1; display: grid; place-items: center; border-bottom: 1px solid var(--line); }
+    .product-image span { position: absolute; top: 12px; left: 12px; z-index: 1; padding: 8px 12px; border: 1px dashed var(--accent); background: color-mix(in srgb, var(--paper) 78%, transparent); color: var(--accent-dark); font-size: 11px; text-align: center; }
+    .product-atk .product-image { background: #e8dccb; }
+    .product-cetak .product-image { background: #aeb7a4; }
+    .product-konveksi .product-image { background: #c98670; }
+    .product-atk .product-image::before { content: ""; width: 30%; aspect-ratio: .72; border: 1px solid var(--ink); background: var(--paper); transform: translate(-50%, -50%) rotate(-8deg); }
+    .product-cetak .product-image::before { content: ""; width: 42%; aspect-ratio: 1.6; border: 1px solid var(--ink); background: var(--paper); transform: translate(-50%, -50%) translate(8px, 8px) rotate(7deg); box-shadow: -12px -8px 0 var(--paper); }
+    .product-konveksi .product-image::before { content: ""; width: 34%; aspect-ratio: .9; background: var(--paper); clip-path: polygon(20% 0, 40% 16%, 60% 16%, 80% 0, 100% 25%, 82% 38%, 75% 100%, 25% 100%, 18% 38%, 0 25%); border: 1px solid var(--ink); transform: translate(-50%, -50%); }
+    .product-body { padding: 24px; }
+    .product h3 { font-size: 24px; }
+    .steps { display: grid; grid-template-columns: repeat(4, 1fr); border-top: 1px solid var(--line); }
+    .step { min-height: 230px; padding: 24px 20px 0 0; border-right: 1px solid var(--line); }
+    .step + .step { padding-left: 20px; }
+    .step:last-child { border-right: 0; }
+    .step-number { color: var(--accent); font-family: var(--serif); font-size: 42px; }
+    .trust-list { margin: 0; padding: 0; list-style: none; border-top: 1px solid var(--line); }
+    .trust-list li { display: flex; justify-content: space-between; gap: 24px; padding: 24px 0; border-bottom: 1px solid var(--line); font-family: var(--serif); font-size: clamp(24px, 3vw, 38px); }
+    .trust-list span { color: var(--accent); font-family: var(--sans); font-size: 14px; }
+    .cta { background: var(--ink); color: var(--bg); }
+    .cta .eyebrow { color: #e5a38d; }
+    .cta h2 { max-width: 650px; }
+    .cta .muted { color: #c4b9ad; }
+    .site-footer { padding: 40px 0; border-top: 1px solid var(--line); }
+    .footer-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 24px; }
+    .footer-grid p { margin-bottom: 8px; }
+    .footer-label { color: var(--muted); font-size: 12px; text-transform: uppercase; letter-spacing: .12em; }
+    .footer-nav { display: flex; flex-direction: column; gap: 8px; margin-top: 16px; }
+    .footer-nav a { min-height: 44px; display: inline-flex; align-items: center; }
+    @media (max-width: 800px) {
+      .nav-toggle { display: block; }
+      .nav-links { display: none; position: absolute; inset: 77px 0 auto; padding: 20px var(--gutter) 28px; flex-direction: column; align-items: stretch; gap: 18px; background: var(--bg); border-bottom: 1px solid var(--line); }
+      .nav-links.is-open { display: flex; }
+      .nav-links .button { width: 100%; }
+      .hero-grid, .intro-grid, .cta-grid { grid-template-columns: 1fr; }
+      .product-visual { min-height: 400px; }
+      .category-grid { grid-template-columns: 1fr; }
+      .product-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .product-grid .product:nth-child(3) { grid-column: 1 / -1; }
+      .product-grid .product:nth-child(3) .product-image { aspect-ratio: 1.15 / 1; }
+      .category:nth-child(2) { transform: none; }
+      .steps { grid-template-columns: 1fr 1fr; }
+      .step:nth-child(2) { border-right: 0; }
+      .step:nth-child(n+3) { border-top: 1px solid var(--line); padding-top: 20px; }
+      .footer-grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 520px) {
+      h1 { font-size: 52px; }
+      .hero { padding-top: 64px; }
+      .product-visual { min-height: 330px; }
+      .product-grid .product:nth-child(3) { grid-column: auto; }
+      .product-grid .product:nth-child(3) .product-image { aspect-ratio: 1.15 / 1; }
+      .steps, .footer-grid { grid-template-columns: 1fr; }
+      .step, .step + .step { min-height: 0; padding: 20px 0; border-right: 0; border-top: 1px solid var(--line); }
+      .step:first-child { border-top: 0; }
+      .trust-list li { align-items: flex-start; flex-direction: column; gap: 8px; }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="wrap nav">
+      <a class="brand" href="#beranda" aria-label="Kanaughi, kembali ke beranda"><span class="wordmark">KANAUGHI</span><span class="wordmark-note">[WORDMARK PLACEHOLDER]</span></a>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="main-nav" aria-label="Buka menu">Menu</button>
+      <nav id="main-nav" class="nav-links" aria-label="Navigasi utama">
+        <a href="#beranda" aria-current="page">Beranda</a>
+        <a href="catalog.html">Katalog</a>
+        <a href="#tentang">Tentang Kanaughi</a>
+        <a href="#kontak">Kontak</a>
+        <a class="button button-primary" href="catalog.html">Lihat katalog</a>
+      </nav>
+    </div>
+  </header>
+
+  <a class="skip-link" href="#main-content">Lewati ke konten utama</a>
+  <main id="main-content">
+    <section id="beranda" class="hero">
+      <div class="wrap hero-grid">
+        <div class="hero-copy">
+          <p class="eyebrow">PENGADAAN BARANG UNTUK KANTOR DAN EVENT</p>
+          <h1>Pengadaan barang, mulai dari brief yang Anda punya.</h1>
+          <p class="muted">Kanaughi menyediakan alat tulis kantor, media percetakan, dan produk konveksi untuk kebutuhan perusahaan serta event. Sudah punya spesifikasi? Kirimkan detailnya.</p>
+          <div class="actions">
+            <a class="button button-primary" href="catalog.html">Lihat katalog</a>
+            <a class="button button-quiet" href="#cara-kerja">Lihat cara kerja</a>
+          </div>
+        </div>
+        <div class="product-visual" role="img" aria-label="Tiga placeholder produk Kanaughi: alat tulis kantor, media percetakan, dan konveksi">
+          <div class="product-stack">
+            <div class="product-box"><div><strong>ATK</strong><span class="placeholder">[PLACEHOLDER FOTO ATK]</span></div></div>
+            <div class="product-box"><div><strong>Cetak</strong><span class="placeholder">[PLACEHOLDER MEDIA CETAK]</span></div></div>
+            <div class="product-box"><div><strong>Konveksi</strong><span class="placeholder">[PLACEHOLDER FOTO KONVEKSI]</span></div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="tentang">
+      <div class="wrap intro-grid">
+        <div><p class="eyebrow">TENTANG KANAUGHI</p><h2>Mulai dari daftar kebutuhan yang sudah Anda punya.</h2></div>
+        <div class="intro-copy"><p>Anda mungkin sudah tahu barang yang dicari. Mungkin juga baru punya gambaran. Keduanya bisa dimulai dari sini.</p><p>Kanaughi menyediakan barang berdasarkan kebutuhan dan brief pelanggan. Pilih referensi dari katalog, atau sampaikan kebutuhan custom untuk dibahas lebih lanjut.</p></div>
+      </div>
+    </section>
+
+    <section id="kategori">
+      <div class="wrap">
+        <div class="section-head"><div><p class="eyebrow">KATEGORI PRODUK</p><h2>Tiga kategori untuk kebutuhan kantor dan event.</h2></div><p class="muted">Gunakan katalog sebagai titik awal pencarian. Jika belum menemukan bentuk yang sesuai, kirim brief yang Anda punya.</p></div>
+        <div class="category-grid">
+          <a class="category" href="catalog.html#atk"><div class="category-visual visual-atk" role="img" aria-label="Placeholder visual alat tulis kantor"><span>[PLACEHOLDER VISUAL ATK]</span></div><span class="category-number">01</span><div><h3>Alat Tulis Kantor</h3><p>Untuk kebutuhan kerja harian di kantor, mulai dari notebook sampai perlengkapan tulis lainnya.</p><span class="text-link">Lihat produk ATK</span></div></a>
+          <a class="category" href="catalog.html#percetakan"><div class="category-visual visual-cetak" role="img" aria-label="Placeholder visual media percetakan"><span>[PLACEHOLDER VISUAL MEDIA PERCETAKAN]</span></div><span class="category-number">02</span><div><h3>Media Percetakan</h3><p>Untuk materi komunikasi, acara, dan kebutuhan cetak perusahaan.</p><span class="text-link">Lihat media percetakan</span></div></a>
+          <a class="category" href="catalog.html#konveksi"><div class="category-visual visual-konveksi" role="img" aria-label="Placeholder visual konveksi"><span>[PLACEHOLDER VISUAL KONVEKSI]</span></div><span class="category-number">03</span><div><h3>Konveksi</h3><p>Kaos, kemeja, celana, seragam, dan tote bag untuk kebutuhan perusahaan atau event.</p><span class="text-link">Lihat produk konveksi</span></div></a>
+        </div>
+      </div>
+    </section>
+
+    <section id="produk">
+      <div class="wrap">
+        <div class="section-head"><div><p class="eyebrow">CONTOH PRODUK</p><h2>Beberapa produk untuk memulai pencarian.</h2></div><p class="muted">Contoh di bawah ini belum menjadi daftar harga. Gunakan sebagai referensi awal saat menyusun brief.</p></div>
+        <div class="product-grid">
+          <a class="product product-atk" href="catalog.html#atk"><div class="product-image" role="img" aria-label="Placeholder foto notebook custom"><span>[PLACEHOLDER FOTO ASLI]</span></div><div class="product-body"><span class="placeholder">CONTOH SEMENTARA</span><h3>Notebook custom</h3><p>Notebook dengan pilihan format dan identitas yang dapat dibahas sesuai kebutuhan.</p><span class="text-link">Lihat detail</span></div></a>
+          <a class="product product-cetak" href="catalog.html#percetakan"><div class="product-image" role="img" aria-label="Placeholder foto kartu nama perusahaan"><span>[PLACEHOLDER FOTO ASLI]</span></div><div class="product-body"><span class="placeholder">CONTOH SEMENTARA</span><h3>Kartu nama perusahaan</h3><p>Media cetak untuk kebutuhan identitas dan komunikasi perusahaan.</p><span class="text-link">Lihat detail</span></div></a>
+          <a class="product product-konveksi" href="catalog.html#konveksi"><div class="product-image" role="img" aria-label="Placeholder foto kaos event"><span>[PLACEHOLDER FOTO ASLI]</span></div><div class="product-body"><span class="placeholder">CONTOH SEMENTARA</span><h3>Kaos event</h3><p>Kaos untuk kegiatan atau event perusahaan dengan detail yang dibahas berdasarkan brief.</p><span class="text-link">Lihat detail</span></div></a>
+        </div>
+      </div>
+    </section>
+
+    <section id="cara-kerja">
+      <div class="wrap"><div class="section-head"><div><p class="eyebrow">CARA KERJA</p><h2>Dari kebutuhan awal menuju pilihan produk.</h2></div></div>
+        <div class="steps">
+          <article class="step"><span class="step-number">01</span><h3>Ceritakan kebutuhannya</h3><p class="muted">Sebutkan barang, jumlah, ukuran, bahan, atau waktu yang sudah Anda ketahui.</p></article>
+          <article class="step"><span class="step-number">02</span><h3>Pilih dari katalog atau kirim brief</h3><p class="muted">Gunakan katalog sebagai referensi. Jika butuh penyesuaian, kirim brief yang tersedia.</p></article>
+          <article class="step"><span class="step-number">03</span><h3>Bahas opsinya</h3><p class="muted">Kanaughi menyiapkan pilihan untuk dibahas bersama berdasarkan informasi yang diberikan.</p></article>
+          <article class="step"><span class="step-number">04</span><h3>Lanjutkan pemesanan</h3><p class="muted">Setelah pilihan sesuai, detail pemesanan dapat dilanjutkan.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section id="kepercayaan">
+      <div class="wrap intro-grid"><div><p class="eyebrow">TENTANG CARA KERJA KAMI</p><h2>Cara memulai dengan Kanaughi.</h2></div>
+        <ul class="trust-list"><li>Berbasis kebutuhan <span>01</span></li><li>Produk dapat disesuaikan <span>02</span></li><li>Satu katalog untuk berbagai kebutuhan <span>03</span></li></ul>
+      </div>
+    </section>
+
+    <section id="kontak" class="cta">
+      <div class="wrap cta-grid"><div><p class="eyebrow">MULAI DARI BRIEF</p><h2>Sudah punya daftar kebutuhan?</h2></div><div><p class="muted">Kirim informasi yang sudah ada. Detail lainnya bisa dibahas setelahnya.</p><div class="actions"><a class="button button-quiet" href="catalog.html">Lihat katalog</a></div><p id="placeholder-whatsapp" class="contact-status">WhatsApp: [NOMOR WHATSAPP AKAN DITAMBAHKAN]</p></div></div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap footer-grid">
+      <div><a class="brand" href="#beranda" aria-label="Kanaughi, kembali ke beranda"><span class="wordmark">KANAUGHI</span><span class="wordmark-note">[WORDMARK PLACEHOLDER]</span></a><p class="muted">Pengadaan barang untuk perusahaan dan kebutuhan event.</p></div>
+      <div><p class="footer-label">Lokasi</p><p>Bekasi</p><p class="placeholder">[PLACEHOLDER] Alamat lengkap</p></div>
+      <div><p class="footer-label">Kontak</p><p class="placeholder">[NOMOR WHATSAPP PLACEHOLDER]</p><p class="placeholder">[INSTAGRAM PLACEHOLDER]</p><nav class="footer-nav" aria-label="Navigasi footer"><a href="catalog.html">Katalog</a><a href="#tentang">Tentang Kanaughi</a><a href="#kontak">Kontak</a></nav><p class="muted">[TAHUN] Kanaughi. Konten placeholder sementara.</p></div>
+    </div>
+  </footer>
+  <script>
+    const toggle = document.querySelector('.nav-toggle');
+    const nav = document.querySelector('#main-nav');
+    const closeMenu = (restoreFocus = false) => {
+      nav.classList.remove('is-open');
+      toggle.setAttribute('aria-expanded', 'false');
+      toggle.setAttribute('aria-label', 'Buka menu');
+      if (restoreFocus) toggle.focus();
+    };
+    toggle.addEventListener('click', () => {
+      const open = !nav.classList.contains('is-open');
+      nav.classList.toggle('is-open', open);
+      toggle.setAttribute('aria-expanded', String(open));
+      toggle.setAttribute('aria-label', open ? 'Tutup menu' : 'Buka menu');
+    });
+    nav.addEventListener('click', event => {
+      if (event.target.closest('a') && nav.classList.contains('is-open')) closeMenu(false);
+    });
+    document.addEventListener('keydown', event => {
+      if (event.key === 'Escape' && nav.classList.contains('is-open')) closeMenu(true);
+    });
+  </script>
+</body>
+</html>
